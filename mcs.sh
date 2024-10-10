@@ -15,7 +15,6 @@ else
     exit 1
 fi
 
-# Присоединение к сети
 sudo zerotier-cli join "$network_id" > /dev/null 2>&1
 
 host_choice=""
@@ -23,16 +22,13 @@ while [[ -z "$host_choice" ]]; do
     read -p "Хотите хостить Mumble сервер? (да/нет): " host_choice
 done
 
-# Получение IP-адреса ZeroTier
 ip_address=$(sudo zerotier-cli listnetworks | grep -oP '10\.\d{1,3}\.\d{1,3}\.\d{1,3}' | head -n 1)
 
-# Проверка, найден ли IP-адрес
 if [[ -z "$ip_address" ]]; then
     echo "Не удалось получить IP-адрес ZeroTier."
     exit 1
 fi
 
-# Вывод IP-адреса и копирование в буфер обмена
 echo "Ваш IP-адрес: $ip_address"
 echo "$ip_address" | wl-copy
 
@@ -45,5 +41,4 @@ else
 fi
 
 mumble "$ip_address" > /dev/null 2>&1 &
-
 disown
